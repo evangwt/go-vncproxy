@@ -1,5 +1,10 @@
 # go-vncproxy
-A tiny vnc websocket proxy written by golang supports novnc client
+A tiny vnc websocket proxy written by golang supports novnc client.
+
+# Feature
+
+ * Token handler: like [!websockify](https://github.com/novnc/websockify), you can customlize the token handler to multiple vnc backend by a single proxy instance.
+ * Authentication: it depends on your vnc servers, since the proxy just copy the stream of both clients and servers.
 
 # Usage
 ```go
