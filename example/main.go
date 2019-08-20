@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/evangwt/vncproxy"
+	"github.com/evangwt/go-vncproxy"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/net/websocket"
