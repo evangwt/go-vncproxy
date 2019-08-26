@@ -25,7 +25,7 @@ func main() {
 
 func NewVNCProxy() *vncproxy.Proxy {
 	return vncproxy.New(&vncproxy.Config{
-		LogLevel: vncproxy.InfoLevel | vncproxy.DebugLevel,
+		LogLevel: vncproxy.DebugLevel,
 		TokenHandler: func(r *http.Request) (addr string, err error) {
 			return ":5901", nil
 		},
