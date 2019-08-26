@@ -2,6 +2,7 @@ package vncproxy
 
 import (
 	"net"
+	"time"
 
 	"github.com/evangwt/go-bufcopy"
 
@@ -29,6 +30,16 @@ func NewPeer(ws *websocket.Conn, addr string) (*peer, error) {
 	c, err := net.Dial("tcp", addr)
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot connect to vnc backend")
+	}
+
+	err = c.(*net.TCPConn).SetKeepAlive(true)
+	if err != nil {
+		return nil, errors.Wrap(err, "enable vnc backend connection keepalive failed")
+	}
+
+	err = c.(*net.TCPConn).SetKeepAlivePeriod(30 * time.Second)
+	if err != nil {
+		return nil, errors.Wrap(err, "set vnc backend connection keepalive period failed")
 	}
 
 	return &peer{
