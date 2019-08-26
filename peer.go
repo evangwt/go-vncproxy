@@ -27,7 +27,7 @@ func NewPeer(ws *websocket.Conn, addr string) (*peer, error) {
 		return nil, errors.New("websocket connection is nil")
 	}
 
-	c, err := net.Dial("tcp", addr)
+	c, err := net.DialTimeout("tcp", addr, 5*time.Second)
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot connect to vnc backend")
 	}
