@@ -98,6 +98,7 @@ func (p *Proxy) addPeer(peer *peer) {
 func (p *Proxy) deletePeer(peer *peer) {
 	p.l.Lock()
 	delete(p.peers, peer)
+	peer.Close()
 	p.l.Unlock()
 }
 
