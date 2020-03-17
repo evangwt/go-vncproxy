@@ -37,10 +37,10 @@ func NewVNCProxy() *vncproxy.Proxy {
 	return vncproxy.New(&vncproxy.Config{
 		LogLevel: vncproxy.DebugLevel,
 		TokenHandler: func(r *http.Request) (addr string, err error) {
-      // validate token and get forward vnc addr
-      // ...
-      addr = ":5901"
-      return
+      		// validate token and get forward vnc addr
+      		// ...
+      		addr = ":5901"
+      		return
 		},
 	})
 }
