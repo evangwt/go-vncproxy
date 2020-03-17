@@ -3,7 +3,7 @@ A tiny vnc websocket proxy written by golang supports [noVNC](https://github.com
 
 # Feature
 
- * Token handler: like [websockify](https://github.com/novnc/websockify), you can customlize the token handler to multiple vnc backend by a single proxy instance.
+ * Token handler: like [websockify](https://github.com/novnc/websockify), you can customlize the token handler to access multiple vnc backends by a single proxy instance.
  * Authentication: it depends on your vnc servers, since the proxy just copy the stream of both clients and servers.
 
 # Usage
@@ -37,7 +37,10 @@ func NewVNCProxy() *vncproxy.Proxy {
 	return vncproxy.New(&vncproxy.Config{
 		LogLevel: vncproxy.DebugLevel,
 		TokenHandler: func(r *http.Request) (addr string, err error) {
-			return ":5901", nil
+      // validate token and get forward vnc addr
+      // ...
+      addr = ":5901"
+      return
 		},
 	})
 }
