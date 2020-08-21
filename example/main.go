@@ -26,6 +26,8 @@ func main() {
 func NewVNCProxy() *vncproxy.Proxy {
 	return vncproxy.New(&vncproxy.Config{
 		LogLevel: vncproxy.DebugLevel,
+		// Logger: customerLogger,	// inject a custom logger
+		// DialTimeout: 10 * time.Second, // customer DialTimeout
 		TokenHandler: func(r *http.Request) (addr string, err error) {
 			return ":5901", nil
 		},
