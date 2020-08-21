@@ -6,40 +6,62 @@ import (
 )
 
 const (
-	InfoLevel  uint32 = 0x1 << 0
-	DebugLevel uint32 = InfoLevel | 0x1<<1
+	InfoFlag  uint32 = 0x1 << 0
+	DebugFlag uint32 = 0x1 << 1
+
+	InfoLevel  uint32 = InfoFlag
+	DebugLevel uint32 = InfoFlag | DebugFlag
 )
 
-type logger struct {
-	level uint32
+type Logger interface {
+	Infof(format string, v ...interface{})
+	Debugf(format string, v ...interface{})
 }
 
-func NewLogger(level uint32) *logger {
+type logger struct {
+	level  uint32
+	logger Logger
+}
+
+func NewLogger(level uint32, instance Logger) *logger {
 	return &logger{
-		level: level,
+		level:  level,
+		logger: instance,
+	}
+}
+
+func (l *logger) print(level string, msg ...interface{}) {
+	if l.logger != nil {
+		if level == "debug" {
+			l.logger.Debugf("[vncproxy] %v", fmt.Sprint(msg...))
+		} else {
+			l.logger.Infof("[vncproxy] %v", fmt.Sprint(msg...))
+		}
+	} else {
+		log.Printf("[vncproxy][%v] %v", level, fmt.Sprint(msg...))
 	}
 }
 
 func (l *logger) Info(msg ...interface{}) {
-	if l.level&InfoLevel > 0 {
-		log.Printf("[vncproxy][info] %v", fmt.Sprint(msg...))
+	if l.level&InfoFlag > 0 {
+		l.print("info", msg...)
 	}
 }
 
 func (l *logger) Infof(format string, msg ...interface{}) {
-	if l.level&InfoLevel > 0 {
-		log.Printf("[vncproxy][info] %v", fmt.Sprintf(format, msg...))
+	if l.level&InfoFlag > 0 {
+		l.print("info", fmt.Sprintf(format, msg...))
 	}
 }
 
 func (l *logger) Debug(msg ...interface{}) {
-	if l.level&DebugLevel > 0 {
-		log.Printf("[vncproxy][debug] %v", fmt.Sprint(msg...))
+	if l.level&DebugFlag > 0 {
+		l.print("debug", msg...)
 	}
 }
 
 func (l *logger) Debugf(format string, msg ...interface{}) {
-	if l.level&DebugLevel > 0 {
-		log.Printf("[vncproxy][debug] %v", fmt.Sprintf(format, msg...))
+	if l.level&DebugFlag > 0 {
+		l.print("debug", fmt.Sprintf(format, msg...))
 	}
 }

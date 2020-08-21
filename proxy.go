@@ -13,6 +13,7 @@ type TokenHandler func(r *http.Request) (addr string, err error)
 // Config represents vnc proxy config
 type Config struct {
 	LogLevel uint32
+	Logger   Logger
 	TokenHandler
 }
 
@@ -36,7 +37,7 @@ func New(conf *Config) *Proxy {
 
 	return &Proxy{
 		logLevel:     conf.LogLevel,
-		logger:       NewLogger(conf.LogLevel),
+		logger:       NewLogger(conf.LogLevel, conf.Logger),
 		peers:        make(map[*peer]struct{}),
 		l:            sync.RWMutex{},
 		tokenHandler: conf.TokenHandler,
