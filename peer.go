@@ -11,6 +11,10 @@ import (
 	"golang.org/x/net/websocket"
 )
 
+const (
+	defaultDialTimeout = 5 * time.Second
+)
+
 var (
 	bcopy = bufcopy.New()
 )
@@ -22,12 +26,19 @@ type peer struct {
 	target net.Conn
 }
 
-func NewPeer(ws *websocket.Conn, addr string) (*peer, error) {
+func NewPeer(ws *websocket.Conn, addr string, dialTimeout time.Duration) (*peer, error) {
 	if ws == nil {
 		return nil, errors.New("websocket connection is nil")
 	}
 
-	c, err := net.DialTimeout("tcp", addr, 5*time.Second)
+	if len(addr) == 0 {
+		return nil, errors.New("addr is empty")
+	}
+
+	if dialTimeout <= 0 {
+		dialTimeout = defaultDialTimeout
+	}
+	c, err := net.DialTimeout("tcp", addr, dialTimeout)
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot connect to vnc backend")
 	}

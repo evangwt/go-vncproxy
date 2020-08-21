@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strings"
 	"sync"
+	"time"
 
 	"golang.org/x/net/websocket"
 )
@@ -12,8 +13,9 @@ type TokenHandler func(r *http.Request) (addr string, err error)
 
 // Config represents vnc proxy config
 type Config struct {
-	LogLevel uint32
-	Logger   Logger
+	LogLevel    uint32
+	Logger      Logger
+	DialTimeout time.Duration
 	TokenHandler
 }
 
@@ -21,6 +23,7 @@ type Config struct {
 type Proxy struct {
 	logLevel     uint32
 	logger       *logger
+	dialTimeout  time.Duration // Timeout for connecting to each target vnc server
 	peers        map[*peer]struct{}
 	l            sync.RWMutex
 	tokenHandler TokenHandler
@@ -38,6 +41,7 @@ func New(conf *Config) *Proxy {
 	return &Proxy{
 		logLevel:     conf.LogLevel,
 		logger:       NewLogger(conf.LogLevel, conf.Logger),
+		dialTimeout:  conf.DialTimeout,
 		peers:        make(map[*peer]struct{}),
 		l:            sync.RWMutex{},
 		tokenHandler: conf.TokenHandler,
@@ -59,7 +63,7 @@ func (p *Proxy) ServeWS(ws *websocket.Conn) {
 		return
 	}
 
-	peer, err := NewPeer(ws, addr)
+	peer, err := NewPeer(ws, addr, p.dialTimeout)
 	if err != nil {
 		p.logger.Infof("new vnc peer failed: %v", err)
 		return
@@ -104,5 +108,7 @@ func (p *Proxy) deletePeer(peer *peer) {
 }
 
 func (p *Proxy) Peers() map[*peer]struct{} {
+	p.l.RLock()
+	defer p.l.RUnlock()
 	return p.peers
 }
