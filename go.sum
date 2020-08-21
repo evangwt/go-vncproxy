@@ -1,5 +1,7 @@
 github.com/evangwt/go-bufcopy v0.0.0-20190812085914-749421aa7f6c h1:QmBPQUaFqT52kDxA4nhcRcR46zU7utc+jSe4ID1gANc=
 github.com/evangwt/go-bufcopy v0.0.0-20190812085914-749421aa7f6c/go.mod h1:BxQh2K7De2/Gp6tFn0D5zaVVtrg71WZSYWNN6JMskqk=
+github.com/evangwt/go-bufcopy v0.1.1 h1:dJDsc/n+rDQj1jEQueddij8Lok4XSy3jBEjCNztqdDE=
+github.com/evangwt/go-bufcopy v0.1.1/go.mod h1:0rJeA3+mLjd/WmJmDjZdNU1dZZAxlzW2+VDgGrxFzL8=
 github.com/pkg/errors v0.8.1 h1:iURUrRGxPUNPdy5/HRSm+Yj6okJ6UtLINN0Q9M4+h3I=
 github.com/pkg/errors v0.8.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
