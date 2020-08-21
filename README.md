@@ -1,4 +1,7 @@
 # go-vncproxy
+
+[![GitHub release](https://img.shields.io/github/release/evangwt/go-vncproxy.svg)](https://github.com/evangwt/go-vncproxy/releases/)[![GitHub All Releases](https://img.shields.io/github/downloads/evangwt/go-vncproxy/total)](https://github.com/evangwt/go-vncproxy)
+
 A tiny vnc websocket proxy written by golang supports [noVNC](https://github.com/novnc/noVNC) client.
 
 # Feature
@@ -37,11 +40,11 @@ func NewVNCProxy() *vncproxy.Proxy {
 	return vncproxy.New(&vncproxy.Config{
 		LogLevel: vncproxy.DebugLevel,
 		TokenHandler: func(r *http.Request) (addr string, err error) {
-      		// validate token and get forward vnc addr
-      		// ...
-      		addr = ":5901"
-      		return
-		},
-	})
+      // validate token and get forward vnc addr
+      // ...
+      addr = ":5901"
+      return
+    },
+  })
 }
 ```
