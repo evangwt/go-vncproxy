@@ -1,6 +1,6 @@
 # go-vncproxy
 
-[![GitHub release](https://img.shields.io/github/release/evangwt/go-vncproxy.svg)](https://github.com/evangwt/go-vncproxy/releases/)[![GitHub All Releases](https://img.shields.io/github/downloads/evangwt/go-vncproxy/total)](https://github.com/evangwt/go-vncproxy)
+[![Go Report Card](https://goreportcard.com/badge/github.com/evangwt/go-vncproxy)](https://goreportcard.com/report/github.com/evangwt/go-vncproxy)[![GitHub release](https://img.shields.io/github/release/evangwt/go-vncproxy.svg)](https://github.com/evangwt/go-vncproxy/releases/)
 
 A tiny vnc websocket proxy written by golang supports [noVNC](https://github.com/novnc/noVNC) client.
 
