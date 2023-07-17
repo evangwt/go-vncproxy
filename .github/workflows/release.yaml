@@ -1,0 +1,47 @@
+name: Publish New Release
+on:
+  release:
+    types: [created]
+
+jobs:
+  releases-matrix:
+    name: Release Go Binary
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux]
+        goarch: [amd64]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-go@v2
+      with:
+        go-version: '^1.20'
+
+    - name: make dist
+      run: mkdir -p dist
+
+    - name: build
+      run: go build -ldflags "-s -w" -o dist/ ./...
+      env:
+        CGO_ENABLED: 0
+        GOOS: ${{ matrix.goos }}
+        GOARCH: ${{ matrix.goarch }}
+
+    - name: additional items
+      run: cp README.md dist/
+
+    - name: Tar Folder
+      if: ${{ matrix.goos != 'windows'}}
+      run: tar czf ../release.tgz ./
+      working-directory: dist
+
+
+    - name: Upload release assets
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_name: govnc-${{ matrix.goos }}-${{ matrix.goarch }}.${{ matrix.goos == 'windows' && 'zip' || 'tgz' }}
+        asset_path: ${{ matrix.goos == 'windows' && 'release.zip' || 'release.tgz' }}
+        asset_content_type: application/octet-stream

@@ -53,6 +53,24 @@ func NewPeer(ws *websocket.Conn, addr string, dialTimeout time.Duration) (*peer,
 		return nil, errors.Wrap(err, "set vnc backend connection keepalive period failed")
 	}
 
+	// create 30 seconds timer to send ping message into the websocket connection
+	// to keep the websocket connection alive
+	go func() {
+		ticker := time.NewTicker(10 * time.Second)
+		defer ticker.Stop()
+		for {
+			select {
+			case <-ticker.C:
+				codec := websocket.Codec{Marshal: func(v interface{}) (data []byte, payloadType byte, err error) {
+					return nil, websocket.PingFrame, nil
+				}}
+				if err := codec.Send(ws, nil); err != nil {
+					ws.Close()
+				}
+			}
+		}
+	}()
+
 	return &peer{
 		source: ws,
 		target: c,
