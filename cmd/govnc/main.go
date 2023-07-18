@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/codio/go-vncproxy/pkg/go-vncproxy"
 
@@ -59,8 +61,21 @@ func runProxy(port int, vncPort int) {
 	router.GET("/index.html", serveIndex)
 	router.GET("/", serveIndex)
 
-	if err := router.Run(fmt.Sprintf(":%d", port)); err != nil {
-		panic(err)
+	if os.Getenv("LISTEN_PID") == strconv.Itoa(os.Getpid()) {
+		// systemd socket activation
+		f := os.NewFile(3, "from systemd")
+		listener, err := net.FileListener(f)
+		if err != nil {
+			panic(err)
+		}
+		if err := router.RunListener(listener); err != nil {
+			panic(err)
+		}
+	} else {
+		// cli activation
+		if err := router.Run(fmt.Sprintf(":%d", port)); err != nil {
+			panic(err)
+		}
 	}
 }
 
