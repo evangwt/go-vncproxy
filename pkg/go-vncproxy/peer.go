@@ -53,8 +53,8 @@ func NewPeer(ws *websocket.Conn, addr string, dialTimeout time.Duration) (*peer,
 		return nil, errors.Wrap(err, "set vnc backend connection keepalive period failed")
 	}
 
-	// create 30 seconds timer to send ping message into the websocket connection
-	// to keep the websocket connection alive
+	// 10 seconds timer to support connection open
+	// TODO update websockerts to https://github.com/gorilla/websocket
 	go func() {
 		ticker := time.NewTicker(10 * time.Second)
 		defer ticker.Stop()
