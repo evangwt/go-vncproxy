@@ -13,7 +13,7 @@ jobs:
         goarch: [amd64]
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-go@v2
+    - uses: actions/setup-go@v4
       with:
         go-version: '^1.20'
 
@@ -35,6 +35,14 @@ jobs:
       run: tar czf ../release.tgz ./
       working-directory: dist
 
+
+    - name: Upload To Artifactory
+      if: ${{ matrix.goos != 'windows'}}
+      run: curl --fail -i -u"${BINARY_REPOSITORY_CREDENTIALS}" -T release.tgz "${BINARY_REPOSITORY_URL}/component-builds/govnc-${GIT_HASH}.tar.gz"
+      env: 
+        BINARY_REPOSITORY_URL: ${{ secrets.BINARY_REPOSITORY_URL }}
+        GIT_HASH: ${{ github.sha }}
+        BINARY_REPOSITORY_CREDENTIALS: ${{ secrets.BINARY_REPOSITORY_USER }}:${{ secrets.BINARY_REPOSITORY_PASSWORD }}
 
     - name: Upload release assets
       uses: actions/upload-release-asset@v1
