@@ -7,8 +7,6 @@ import (
 	"github.com/evangwt/go-bufcopy"
 
 	"github.com/pkg/errors"
-
-	"golang.org/x/net/websocket"
 )
 
 const (
@@ -22,11 +20,11 @@ var (
 // peer represents a vnc proxy peer
 // with a websocket connection and a vnc backend connection
 type peer struct {
-	source *websocket.Conn
+	source WebSocketAdapter
 	target net.Conn
 }
 
-func NewPeer(ws *websocket.Conn, addr string, dialTimeout time.Duration) (*peer, error) {
+func NewPeer(ws WebSocketAdapter, addr string, dialTimeout time.Duration) (*peer, error) {
 	if ws == nil {
 		return nil, errors.New("websocket connection is nil")
 	}
